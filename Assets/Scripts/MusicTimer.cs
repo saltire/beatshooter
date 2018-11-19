@@ -21,24 +21,24 @@ public class MusicTimer : MonoBehaviour {
 	}
 
 	void Update() {
-		float time = Time.time + startOffset;
+		float time = Time.time - (Time.time > 0 ? startOffset : 0);
 		int bar = (int)(time / barLength);
-		float beatTime = time % barLength;
+		float barTime = time % barLength;
 
-		if (beatTime < Time.deltaTime) {
+		if (OnWhole != null && barTime <= Time.deltaTime) {
 			OnWhole(bar, 0);
 		}
-		if (beatTime % (barLength / 2) <= Time.deltaTime) {
-			OnHalf(bar, (int)(beatTime * 2 / barLength));
+		if (OnHalf != null && barTime % (barLength / 2) <= Time.deltaTime) {
+			OnHalf(bar, (int)(barTime * 2 / barLength));
 		}
-		if (beatTime % (barLength / 4) <= Time.deltaTime) {
-			OnQuarter(bar, (int)(beatTime * 4 / barLength));
+		if (OnQuarter != null && barTime % (barLength / 4) <= Time.deltaTime) {
+			OnQuarter(bar, (int)(barTime * 4 / barLength));
 		}
-		if (beatTime % (barLength / 8) <= Time.deltaTime) {
-			OnEighth(bar, (int)(beatTime * 8 / barLength));
+		if (OnEighth != null && barTime % (barLength / 8) <= Time.deltaTime) {
+			OnEighth(bar, (int)(barTime * 8 / barLength));
 		}
-		if (beatTime % (barLength / 16) <= Time.deltaTime) {
-			OnSixteenth(bar, (int)(beatTime * 16 / barLength));
+		if (OnSixteenth != null && barTime % (barLength / 16) <= Time.deltaTime) {
+			OnSixteenth(bar, (int)(barTime * 16 / barLength));
 		}
 	}
 }
