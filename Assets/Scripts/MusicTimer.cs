@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MusicTimer : MonoBehaviour {
-	public delegate void BeatEvent(int beat);
+	public delegate void BeatEvent(int bar, int beat);
 	public static event BeatEvent OnWhole;
 	public static event BeatEvent OnHalf;
 	public static event BeatEvent OnQuarter;
@@ -20,22 +20,25 @@ public class MusicTimer : MonoBehaviour {
 		barLength = 60 / bpm * beatsPerBar;
 	}
 
-	void FixedUpdate() {
-		float beatTime = (Time.time + startOffset) % barLength;
+	void Update() {
+		float time = Time.time + startOffset;
+		int bar = (int)(time / barLength);
+		float beatTime = time % barLength;
+
 		if (beatTime < Time.deltaTime) {
-			OnWhole(0);
+			OnWhole(bar, 0);
 		}
 		if (beatTime % (barLength / 2) <= Time.deltaTime) {
-			OnHalf((int)(beatTime * 2 / barLength));
+			OnHalf(bar, (int)(beatTime * 2 / barLength));
 		}
 		if (beatTime % (barLength / 4) <= Time.deltaTime) {
-			OnQuarter((int)(beatTime * 4 / barLength));
+			OnQuarter(bar, (int)(beatTime * 4 / barLength));
 		}
 		if (beatTime % (barLength / 8) <= Time.deltaTime) {
-			OnEighth((int)(beatTime * 8 / barLength));
+			OnEighth(bar, (int)(beatTime * 8 / barLength));
 		}
 		if (beatTime % (barLength / 16) <= Time.deltaTime) {
-			OnSixteenth((int)(beatTime * 16 / barLength));
+			OnSixteenth(bar, (int)(beatTime * 16 / barLength));
 		}
 	}
 }

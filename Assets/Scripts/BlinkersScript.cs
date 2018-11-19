@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Blinkers : MonoBehaviour {
+public class BlinkersScript : MonoBehaviour {
 	public Blinker dotPrefab;
 
 	Blinker whole;
@@ -42,23 +42,23 @@ public class Blinkers : MonoBehaviour {
 		}
 	}
 
-	void OnWhole(int beat) {
+	void OnWhole(int bar, int beat) {
 		whole.Blink();
 	}
 
-	void OnHalf(int beat) {
+	void OnHalf(int bar, int beat) {
 		halves[beat].Blink();
 	}
 
-	void OnQuarter(int beat) {
+	void OnQuarter(int bar, int beat) {
 		quarters[beat].Blink();
 	}
 
-	void OnEighth(int beat) {
+	void OnEighth(int bar, int beat) {
 		eighths[beat].Blink();
 	}
 
-	void OnSixteenth(int beat) {
+	void OnSixteenth(int bar, int beat) {
 		sixteenths[beat].Blink();
 	}
 }
