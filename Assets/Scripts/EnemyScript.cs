@@ -8,37 +8,26 @@ public class EnemyScript : MonoBehaviour {
 	public float bigGrow = 1.6f;
 	public float smallGrow = 1.25f;
 	public float shrinkLength = .25f;
-	float lastGrowTime;
 	float shrinkVelocity = 0;
 
 	bool hatched = false;
-
-	int[] kicks = new int[] {
-		1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0,
-	};
 
 	Transform sprite;
 
 	void Start() {
 		sprite = transform.GetChild(0);
-		sprite.localScale = new Vector3(bigGrow, bigGrow, 1);
 
-		MusicTimer.OnSixteenth += Grow;
+		MidiParser.OnKick += () => Grow(false);
+		MidiParser.OnSnare += () => Grow(true);
+		
+		Grow(false);
 	}
 
-	void Grow(int bar, int beat) {
-		int kbeat = ((bar % 2) << 4) + beat;
-		if (kicks[kbeat] == 1 || (bar % 16 == 7 && (beat == 13 || beat == 15))) {
-			float newScale = sprite.localScale.x * smallGrow;
-			if (!hatched || kbeat == 8 || kbeat == 28 || (bar % 16 == 7 && (beat == 13 || beat == 15))) {
-				newScale = bigGrow;
-			}
-			sprite.localScale = new Vector3(newScale, newScale, 1);
-			lastGrowTime = Time.time;
-		}
+	void Grow(bool big) {
+		float scale = big ? bigGrow : smallGrow;
+		sprite.localScale = new Vector3(scale, scale, 1);
 
-		if (!hatched && beat == 8) {
+		if (!hatched && big) {
 			sprite.GetComponent<SpriteRenderer>().sprite = enemySprite;
 			hatched = true;
 		}

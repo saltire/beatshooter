@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnerScript : MonoBehaviour {
+public class EnemySpawner : MonoBehaviour {
 	public GameObject enemyPrefab;
 	public int spawnBar = 0;
 
 	void Start() {
-		MusicTimer.OnWhole += Spawn;
+		MidiParser.OnBar += OnBar;
 	}
 
-	void Spawn(int bar, int beat) {
+	void OnBar(int bar) {
 		if (bar == spawnBar) {
 			Instantiate(enemyPrefab, transform.position, Quaternion.identity);
 
-			MusicTimer.OnWhole -= Spawn;
+			MidiParser.OnBar -= OnBar;
 			Destroy(gameObject);
 		}
 	}

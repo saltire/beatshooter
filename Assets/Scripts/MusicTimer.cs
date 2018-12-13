@@ -16,12 +16,17 @@ public class MusicTimer : MonoBehaviour {
 
 	public float startOffset = 0;
 
+	// AudioSource music;
+
 	void Awake() {
 		barLength = 60 / bpm * beatsPerBar;
+
+		// music = GetComponent<AudioSource>();
 	}
 
 	void Update() {
 		float time = Time.time - (Time.time > 0 ? startOffset : 0);
+		// float time = music.time;
 		int bar = (int)(time / barLength);
 		float barTime = time % barLength;
 
