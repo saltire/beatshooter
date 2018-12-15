@@ -85,6 +85,8 @@ MonoBehaviour:
   bigGrow: 1.75
   smallGrow: 1.25
   shrinkLength: 0.25
+  shakeAmount: 0.25
+  shakeLength: 0.1
 --- !u!212 &212425926449306060
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -13,8 +13,9 @@ public class MidiParser : MonoBehaviour {
 	public static event TickEvent OnTick;
 	public static event TickEvent OnBar;
 
+	public string filename;
 	public float bpm = 110;
-	
+
 	AudioSource music;
 	MidiFile mf;
 	List<NoteOnEvent> events = new List<NoteOnEvent>();
@@ -25,11 +26,11 @@ public class MidiParser : MonoBehaviour {
 
 	void Start() {
 		music = GetComponent<AudioSource>();
-		mf = new MidiFile("Assets/contra_era_kicks_snares.mid");
+		mf = new MidiFile(string.Format("Assets/Music/{0}.mid", filename));
 
 		for (int t = 0; t < mf.Tracks; t++) {
 			foreach (MidiEvent ev in mf.Events[t]) {
-				if (ev.CommandCode == MidiCommandCode.MetaEvent && 
+				if (ev.CommandCode == MidiCommandCode.MetaEvent &&
 					((MetaEvent)ev).MetaEventType == MetaEventType.TimeSignature) {
 					beatsInBar = ((TimeSignatureEvent)ev).Numerator;
 					ticksInBar = beatsInBar * mf.DeltaTicksPerQuarterNote;
@@ -48,7 +49,7 @@ public class MidiParser : MonoBehaviour {
 	public float GetBar() {
 		return music.time / 60 * bpm / beatsInBar;
 	}
-	
+
 	void Update() {
 		float currentTicks = GetTicks();
 

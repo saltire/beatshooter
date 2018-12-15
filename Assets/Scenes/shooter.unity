@@ -369,6 +369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e178b436487c824abb6a9b989da327e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  filename: contra_era_kicks_snares
   bpm: 110
 --- !u!1 &1677947848
 GameObject:
