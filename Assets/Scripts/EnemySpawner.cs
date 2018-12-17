@@ -3,33 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour {
-	public GameObject enemyPrefab;
+	public EnemyScript enemyPrefab;
 	public float circleRadius = 4;
+	public float moveAngle = 15;
+	public float spreadAngle = 45;
+	public float startingBar = 0;
+	public Color enemyColor = Color.white;
 
-	List<GameObject> enemies = new List<GameObject>();
+	List<EnemyScript> enemies = new List<EnemyScript>();
 
 	void Start() {
 		MidiParser.OnBar += OnBar;
 	}
 
 	void OnBar(int bar) {
-		if (bar == 0) {
+		if (bar == startingBar) {
 			SpawnEnemyOnCircle(0);
 		}
-		else if (bar == 2) {
-			SpawnEnemyOnCircle(55);
-			SpawnEnemyOnCircle(-55);
+		else if (bar == startingBar + 2) {
+			SpawnEnemyOnCircle(spreadAngle);
+			SpawnEnemyOnCircle(-spreadAngle);
 		}
 
-		if (bar == 4) {
-			foreach (GameObject enemy in enemies) {
-				enemy.GetComponent<EnemyScript>().moveOnKick = true;
+		if (bar == startingBar + 4) {
+			foreach (EnemyScript enemy in enemies) {
+				enemy.moveOnKick = true;
 			}
 		}
 	}
 
 	void SpawnEnemyOnCircle(float angle) {
 		Vector3 position = Quaternion.Euler(0, 0, angle) * Vector3.up * circleRadius;
-		enemies.Add(Instantiate(enemyPrefab, position, Quaternion.identity));
+		EnemyScript enemy = Instantiate(enemyPrefab, position, Quaternion.identity);
+		enemy.SetColor(enemyColor);
+		enemy.moveAngle = moveAngle;
+		enemies.Add(enemy);
 	}
 }

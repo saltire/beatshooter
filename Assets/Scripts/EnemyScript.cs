@@ -7,12 +7,12 @@ public class EnemyScript : MonoBehaviour {
 
 	public float bigGrow = 1.6f;
 	public float smallGrow = 1.25f;
-	public float shrinkLength = .25f;
+	public float shrinkDuration = .25f;
 	float shrinkVelocity = 0;
 
 	public float shakeAmount = .15f;
-	public float shakeLength = .1f;
-	Vector3 shakeVelocity = Vector3.zero;
+	public float moveDuration = .1f;
+	Vector3 moveVelocity = Vector3.zero;
 	
 	public bool moveOnKick = false;
 	public float moveAngle = 15;
@@ -24,14 +24,16 @@ public class EnemyScript : MonoBehaviour {
 
 	bool hatched = false;
 
-	Transform sprite;
-
 	Vector3 targetPosition;
 	Vector3 shakyTargetPosition;
 
-	void Start() {
-		sprite = transform.GetChild(0);
+	SpriteRenderer spriter;
 
+	void Awake() {
+		spriter = GetComponent<SpriteRenderer>();
+	}
+
+	void Start() {
 		targetPosition = transform.position;
 
 		MidiParser.OnKick += OnKick;
@@ -41,14 +43,14 @@ public class EnemyScript : MonoBehaviour {
 	}
 
 	void Update() {
-		if (sprite.localScale.x > 1) {
-			float scale = Mathf.SmoothDamp(sprite.localScale.x, 1, ref shrinkVelocity, shrinkLength);
-			sprite.localScale = new Vector3(scale, scale, 1);
+		if (transform.localScale.x > 1) {
+			float scale = Mathf.SmoothDamp(transform.localScale.x, 1, ref shrinkVelocity, shrinkDuration);
+			transform.localScale = new Vector3(scale, scale, 1);
 		}
 
 		shakyTargetPosition = targetPosition + (Vector3)Random.insideUnitCircle * shakeAmount;
 		transform.position = Vector3.SmoothDamp(transform.position, shakyTargetPosition,
-			ref shakeVelocity, shakeLength);
+			ref moveVelocity, moveDuration);
 	}
 
 	void OnKick() {
@@ -67,10 +69,10 @@ public class EnemyScript : MonoBehaviour {
 
 	void Grow(bool big) {
 		float scale = big ? bigGrow : smallGrow;
-		sprite.localScale = new Vector3(scale, scale, 1);
+		transform.localScale = new Vector3(scale, scale, 1);
 
 		if (!hatched && big) {
-			sprite.GetComponent<SpriteRenderer>().sprite = enemySprite;
+			GetComponent<SpriteRenderer>().sprite = enemySprite;
 			hatched = true;
 		}
 	}
@@ -85,6 +87,12 @@ public class EnemyScript : MonoBehaviour {
 			bullet.GetComponent<BulletScript>().movement = 
 				Quaternion.Euler(0, 0, (i + bulletAngleOffset) * 360 / bulletCount) * 
 				Vector3.up * bulletSpeed;
+
+			bullet.GetComponent<SpriteRenderer>().color = spriter.color;
 		}
+	}
+
+	public void SetColor(Color color) {
+		spriter.color = color;
 	}
 }
